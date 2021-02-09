@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" crossorigin="anonymous">
+        <link rel="stylesheet" href="./css/style.css">
+        <title>Micro Service Instagram par <a href="https://dwsapp.io" target="_blank">dwsapp.io</a></title>
+    </head>
+    <body>
+        <header>
+            <h1>Micro Service Instagram par dwsapp.io</h1>
+        </header>
+
+        <main>
+            <section id="instagramForm">
+                <form>
+                    <select name="type">
+                        <option value="tag">Recherche un mot clef</option>
+                        <option value="user">Recherche un profil</option>
+                    </select>
+    
+                    <ul>
+                        <li><input type="text" name="keyword" required min="3" placeholder="Min. 3 caractères"></li>
+                        <li><button type="submit"><i class="fas fa-search"></i></button></li>
+                    </ul>
+                </form>
+            </section>
+            
+            <section id="istagramResult"></section>  
+        </main>
+
+        <footer>
+            <p>Under <a href="https://en.wikipedia.org/wiki/WFPL" target="_blank">WFPL</a> - &copy; 2021 <a href="https://www.linkedin.com/in/julien-n-21219b28/" target="_blank">Julien Noyer</a> / <a href="https://dwsapp.io" target="_blank">dwsapp.io</a></p>
+        </footer>
+
+        <script src="./js/app.js"></script>
+    </body>
+</html>

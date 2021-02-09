@@ -49,24 +49,98 @@ class ServerClass{
     config(){
         // Set up routes
         this.server.get('/:type/:keyword', (req, res) => {
-            fetch(`https://www.instagram.com/explore/${req.params.type}/${req.params.keyword}/?__a=1`)
-            .then( response => {
-                return !response.ok
-                ? res.json(response)
-                : response.json();
-            })
-            .then( data => {
+            // Check type params
+            if( req.params.type === 'tag' || req.params.type === 'user' ){
+                // Set up Instagram query
+                let instagramRequest = null;
+
+                // Check route params
+                req.params.type === 'tag'
+                ? instagramRequest = `explore/tags/${req.params.keyword}`
+                : instagramRequest = `${req.params.keyword}`;
+
+
+                fetch(`${process.env.INSTAGRAM_URL}/${instagramRequest}/?__a=1`)
+                .then( response => {
+                    return !response.ok
+                    ? res.json(response)
+                    : response.json();
+                })
+                .then( apiResponse => {
+                    // Check route params
+                    if( req.params.type === 'tag' ){
+                        let response = [];
+
+                        for( let item of apiResponse.graphql.hashtag.edge_hashtag_to_media.edges){
+                            response.push({
+                                caption: item.node.edge_media_to_caption.edges[0].node.text,
+                                display_url: item.node.display_url,
+                                thumbnails: item.node.thumbnail_resources,
+                                accessibility: item.node.accessibility_caption
+                            })
+                        }
+
+                        
+                        return res.json({
+                            error: null,
+                            methode: 'GET',
+                            route: `${req.params.type}/${req.params.keyword}`,
+                            params: {
+                                type: req.params.type,
+                                keyword: req.params.keyword
+                            },
+                            data: response
+                        })
+                    }
+                    else if( req.params.type === 'user' ){
+                        let response = {
+                            biography: apiResponse.graphql.user.biography,
+                            external_url: apiResponse.graphql.user.external_url,
+                            profile_pic_url: apiResponse.graphql.user.profile_pic_url,
+                            timeline_media: []
+                        };
+
+                        for( let item of apiResponse.graphql.user.edge_owner_to_timeline_media.edges){
+                            response.timeline_media.push({
+                                caption: item.node.edge_media_to_caption.edges[0].node.text,
+                                display_url: item.node.display_url,
+                                thumbnails: item.node.thumbnail_resources,
+                                accessibility: item.node.accessibility_caption
+                            })
+                        }
+
+                        return res.json({
+                            error: null,
+                            methode: 'GET',
+                            route: `${req.params.type}/${req.params.keyword}`,
+                            params: {
+                                type: req.params.type,
+                                keyword: req.params.keyword
+                            },
+                            data: response
+                        })
+                    }
+                    
+                })
+                .catch( err => res.json(err) )
+            }
+            else{
                 return res.json({
+                    error: 'Only tag or user are supported types',
                     methode: 'GET',
                     route: `${req.params.type}/${req.params.keyword}`,
                     params: {
                         type: req.params.type,
                         keyword: req.params.keyword
                     },
-                    data
+                    data: null
                 })
-            })
-            .catch( err => res.json(err) )
+                
+            }
+        })
+
+        this.server.get('/*', (req, res) => {
+            return res.render('index')
         })
 
         // Launch server
