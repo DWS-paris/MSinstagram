@@ -67,20 +67,20 @@ class ServerClass{
                     : response.json();
                 })
                 .then( apiResponse => {
+                    
                     // Check route params
                     if( req.params.type === 'tag' ){
                         let response = [];
-
+                        
                         for( let item of apiResponse.graphql.hashtag.edge_hashtag_to_media.edges){
                             response.push({
-                                caption: item.node.edge_media_to_caption.edges[0].node.text,
+                                caption: item.node.edge_media_to_caption.edges.length > 0 ? item.node.edge_media_to_caption.edges[0].node.text : null,
                                 display_url: item.node.display_url,
                                 thumbnails: item.node.thumbnail_resources,
                                 accessibility: item.node.accessibility_caption
                             })
                         }
 
-                        
                         return res.json({
                             error: null,
                             methode: 'GET',
@@ -89,7 +89,8 @@ class ServerClass{
                                 type: req.params.type,
                                 keyword: req.params.keyword
                             },
-                            data: response
+                            data: response,
+                            apiResponse
                         })
                     }
                     else if( req.params.type === 'user' ){
@@ -117,7 +118,8 @@ class ServerClass{
                                 type: req.params.type,
                                 keyword: req.params.keyword
                             },
-                            data: response
+                            data: response,
+                            apiResponse
                         })
                     }
                     
