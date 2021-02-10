@@ -10,10 +10,11 @@ const getFormSubmit = (formTag, resultTag, requestInfoTag) => {
         fetch(`/${document.querySelector('[name="type"]').value}/${document.querySelector('[name="keyword"]').value}`)
         .then( response => {
             return !response.ok
-            ? document.querySelector(resultTag).innerHTML = '<h2>Server error, please try again...</h2>'
+            ? console.log(response)
             : response.json()
         })
         .then( apiResponse => {
+            console.log(apiResponse)
             if(apiResponse.params){
                 document.querySelector(formTag).reset()
                 apiResponse.params.type === 'tag'
